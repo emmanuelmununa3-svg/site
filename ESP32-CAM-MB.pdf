@@ -1,0 +1,67 @@
+The **ESP32-CAM-MB** is a specialized daughterboard (shield) designed to simplify the programming and debugging of the AI-Thinker ESP32-CAM module. It eliminates the need for manual jumper wires and external USB-to-UART converters by providing a "plug-and-play" micro-USB interface.
+
+---
+
+## 1. Physical Specifications & Layout
+
+The board is designed as a carrier. The ESP32-CAM module sits on top of the MB board via the female headers.
+
+* **USB Interface:** Micro-USB (for power and data).
+* **Driver Chip:** CH340C (USB-to-Serial).
+* **Buttons:** * **RST:** Resets the ESP32-CAM.
+* **IO0 (Boot):** Manually pulls GPIO 0 low to enter flashing mode (though the MB board usually handles this automatically via the serial RTS/DTR pins).
+
+
+* **Dimensions:** Approximately .
+
+---
+
+## 2. Technical Parameters
+
+| Feature | Specification |
+| --- | --- |
+| **Input Voltage** | 5V DC (via Micro-USB) |
+| **Working Voltage** | 3.3V (regulated internally) |
+| **USB-to-Serial Chip** | CH340C |
+| **Baud Rate Support** | 300 bps to 2 Mbps |
+| **Logic Level** | 3.3V |
+| **Power Consumption** | ~500mA Peak (during Wi-Fi/Flash usage) |
+
+---
+
+## 3. Pin Mapping (Interface)
+
+The ESP32-CAM-MB passes the serial signals directly to the ESP32-CAM headers.
+
+| MB Board Pin | ESP32-CAM Pin | Function |
+| --- | --- | --- |
+| **5V** | 5V | Power Supply |
+| **GND** | GND | Common Ground |
+| **TXD** | U0RX (GPIO 3) | Data Transmission |
+| **RXD** | U0TX (GPIO 1) | Data Reception |
+| **DTR/RTS** | GPIO 0 / RST | Auto-Flash Circuitry |
+
+---
+
+## 4. Key Advantages
+
+1. **Auto-Program Circuitry:** Unlike a standard USB-to-UART adapter, the MB board uses the **DTR** and **RTS** lines from the CH340C chip to toggle the Reset and GPIO 0 pins. This means you can click "Upload" in your IDE without touching any buttons or jumpers.
+2. **Stable Power:** It includes a dedicated voltage regulator and capacitors to help mitigate the "brownout" issues common when powering the camera via cheap jumper wires.
+3. **Mechanical Stability:** It acts as a base, making it easier to sit the camera on a flat surface during testing.
+
+---
+
+## 5. Usage Instructions
+
+1. **Installation:** Align the pins of the ESP32-CAM module with the female headers on the MB board and press down firmly.
+2. **Drivers:** Ensure you have the **CH340 drivers** installed on your PC.
+3. **IDE Setup:**
+* **Board:** "AI Thinker ESP32-CAM"
+* **Flash Mode:** "DIO" or "QIO" (DIO is most stable)
+* **Flash Frequency:** 80MHz
+* **Partition Scheme:** "Huge APP" (Necessary for the camera library)
+
+
+4. **Upload:** Connect via USB and click Upload. The board will automatically handle the handshake to enter bootloader mode.
+
+> **Note:** If the upload fails, you may need to manually hold the **IO0** button on the MB board while clicking Upload, then press **RST**.

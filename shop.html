@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MICROPRICES Shop</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; background-color: #f9f9f9; color: #333; }
+    header { background-color: #004080; color: white; padding: 10px 20px; }
+    header h1 { margin: 0; }
+    nav {
+      background-color: #003366;
+      display: flex;
+      justify-content: center;
+      padding: 10px;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin: 0 15px;
+      font-weight: bold;
+    }
+    nav a:hover { text-decoration: underline; }
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 30px;
+      padding: 30px;
+    }
+    .product-row {
+      display: flex;
+      align-items: flex-start;
+      background: #fff;
+      padding: 25px;
+      border: 1px solid #ddd;
+      font-size: 1.15em;
+    }
+    .product-row img {
+      max-width: 220px;
+      margin-right: 25px;
+      border: 1px solid #ccc;
+    }
+    .details { flex: 1; }
+    .details h2 { color: #004080; margin-top: 0; font-size: 1.4em; }
+    .details p { margin: 10px 0; font-size: 1.1em; }
+    .details button {
+      background-color: #0066cc;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      cursor: pointer;
+      margin-top: 12px;
+      font-size: 1.1em;
+    }
+    .cart {
+      background: #fff;
+      padding: 20px;
+      margin: 20px;
+      border: 1px solid #ddd;
+    }
+    footer { background-color: #004080; color: white; text-align: center; padding: 20px; margin-top: 40px; }
+
+    /* Modal styling */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0; top: 0;
+      width: 100%; height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.6);
+    }
+    .modal-content {
+      background-color: #fff;
+      margin: 8% auto;
+      padding: 25px;
+      border: 1px solid #888;
+      width: 70%;
+      max-width: 800px;
+      border-radius: 6px;
+    }
+    .modal-content h2 { color: #004080; }
+    .modal-content img { max-width: 200px; float: left; margin-right: 20px; border: 1px solid #ccc; }
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .close:hover { color: #000; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>MICROPRICES</h1>
+    <p>Clean, affordable, and engineer-friendly e-commerce</p>
+  </header>
+
+  <!-- Navigation Bar -->
+  <nav>
+    <a href="#home">Home</a>
+    <a href="#shop">Shop</a>
+    <a href="#cart">Cart</a>
+    <a href="#contact">Contact</a>
+  </nav>
+
+  <!-- Product Grid -->
+  <div id="shop" class="product-grid">
+    <!-- ESP32 BOARD -->
+    <div class="product-row">
+      <img src="esp32.jpg" alt="ESP32">
+      <div class="details">
+        <h2>ESP32 DevKit V1</h2>
+        <p><strong>Price:</strong> $10.00</p>
+        <p><strong>Specs:</strong> Dual-core Xtensa LX6, Wi-Fi + Bluetooth.</p>
+        <button onclick="addToCart('ESP32 DevKit V1', 10.00)">Add to Cart</button>
+        <button onclick="openModal('esp32Modal')">More Info</button>
+      </div>
+    </div>
+
+    <!-- ESP32 MICRO USB to Serial Port -->
+    <div class="product-row">
+      <img src="esp32usc.jpg" alt="ESP32 MICRO USB to Serial Port">
+      <div class="details">
+        <h2>ESP32 MICRO USB to Serial Port</h2>
+        <p><strong>Price:</strong> $3.87</p>
+        <p><strong>Specs:</strong> USB to UART converter, 3.3V logic.</p>
+        <button onclick="addToCart('ESP32 MICRO USB to Serial Port', 3.87)">Add to Cart</button>
+        <button onclick="openModal('esp32MicroUsbModal')">More Info</button>
+      </div>
+    </div>
+
+    <!-- ESP32 USB C to Serial Port -->
+    <div class="product-row">
+      <img src="esp32usbc.jpg" alt="ESP32 USB C to Serial Port">
+      <div class="details">
+        <h2>ESP32 USB C to Serial Port</h2>
+        <p><strong>Price:</strong> $4.87</p>
+        <p><strong>Specs:</strong> USB to UART converter, 3.3V logic.</p>
+        <button onclick="addToCart('ESP32 USB C to Serial Port', 4.87)">Add to Cart</button>
+        <button onclick="openModal('esp32UsbCModal')">More Info</button>
+      </div>
+    </div>
+
+    <!-- Arduino Uno -->
+    <div class="product-row">
+      <img src="unor3.jpg" alt="Arduino Uno">
+      <div class="details">
+        <h2>Arduino Uno R3</h2>
+        <p><strong>Price:</strong> $7.99</p>
+        <p><strong>Specs:</strong> ATmega328P, 14 digital I/O, 32KB Flash.</p>
+        <button onclick="addToCart('Arduino Uno R3', 7.99)">Add to Cart</button>
+        <button onclick="openModal('arduinoUnoModal')">More Info</button>
+      </div>
+    </div>
+
+    <!--ESP32bootcam-->
+    <div class="product-row">
+      <img src="esp32bootcam.jpg" alt="ESP32bootcam">
+      <div class="details">
+        <h2>ESP32bootcam</h2>
+        <p><strong>Price:</strong> $15.99</p>
+        <p><strong>Specs:</strong> Camera, Wi-Fi + Bluetooth.</p>
+        <button onclick="addToCart('ESP32bootcam', 15.99)">Add to Cart</button>
+        <button onclick="openModal('esp32bootcam')">More Info</button>
+      </div>
+    </div>
+
+    <!--ESP32cam-->
+    <div class="product-row">
+      <img src="esp32cam.jpg" alt="ESP32">
+      <div class="details">
+        <h2>ESP32</h2>
+        <p><strong>Price:</strong> $12.99</p>
+        <p><strong>Specs:</strong> Camera, Wi-Fi + Bluetooth.</p>
+        <button onclick="addToCart('ESP32cam', 12.99)">Add to Cart</button>
+        <button onclick="openModal('esp32cam')">More Info</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Shopping Cart -->
+  <section id="cart" class="cart">
+    <h2>Shopping Cart</h2>
+    <ul id="cart-items"></ul>
+    <p><strong>Total: $<span id="cart-total">0.00</span></strong></p>
+    <button onclick="checkout()">Checkout</button>
+  </section>
+
+  <!-- Contact Section -->
+  <section id="contact" style="padding:20px; background:#fff; margin:20px; border:1px solid #ddd;">
+    <h2>Contact Us</h2>
+    <p>Email: support@microprices.com</p>
+    <p>Phone: +254-700-000-000</p>
+  </section>
+
+  <footer>
+    <p>&copy; 2026 MICROPRICES | Clean, affordable, and engineer-friendly e-commerce</p>
+  </footer>
+
+  <!-- Modals -->
+   <!-- ESP32 BOARD -->
+  <div id="esp32Modal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal('esp32Modal')">&times;</span>
+      <img src="esp32.png" alt="ESP32">
+      <h2>ESP32 – Full Details</h2>
+      <ul>
+        <li>Dual-core Xtensa LX6 processor</li>
+        <li>Wi-Fi + Bluetooth connectivity</li>
+        <li>520KB SRAM, 4MB Flash</li>
+        <li>Low-power consumption modes</li>
+        <li>Type C port connection</li>
+      </ul>
+      <p><a href="esp32-datasheet.pdf" target="_blank">Download Datasheet</a></p>
+      <p><a href="#">Tutorial: Getting Started with ESP32</a></p>
+    </div>
+  </div>
+
+    <!-- ESP32 MICRO USB to Serial Port -->
+  <div id="esp32MicroUsbModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal('esp32MicroUsbModal')">&times;</span>
+      <img src="esp32usc.jpg" alt="ESP32 MICRO USB to Serial Port">
+      <h2>ESP32 MICRO USB to Serial Port – Full Details</h2>
+      <ul>
+        <li>Ease of use with USB interface</li>
+        <li>Shield ready for easy integration</li>
+        <li>Fully compatible with ESP32cam boards</li>
+        <li>Minimal setup</li>
+      </ul>
+      <p><a href="ESP32-CAM-MB.pdf" target="_blank">Download Datasheet</a></p>
+      <p><a href="#">Tutorial: Getting Started with ESP32</a></p>
+    </div>
+  </div>
+
+  <!-- ESP32 USBC to Serial Port -->
+  <div id="esp32UsbCModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal('esp32UsbCModal')">&times;</span>
+      <img src="esp32usbc.jpg" alt="ESP32 USB C to Serial Port">
+      <h2>ESP32 USB C to Serial Port – Full Details</h2>
+      <ul>
+        <li>Ease of use with USB interface</li>
+        <li>Shield ready for easy integration</li>
+        <li>Fully compatible with ESP32cam boards</li>
+        <li>Minimal setup</li>
+      </ul>
+      <p><a href="ESP32-CAM-MB.pdf" target="_blank">Download Datasheet</a></p>
+      <p><a href="#">Tutorial: Getting Started with ESP32</a></p>
+    </div>
+  </div>
+
+  <!-- ESP32bootcam BOARD -->
+  <div id="esp32bootcam" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal('esp32bootcam')">&times;</span>
+      <img src="esp32bootcam.jpg" alt="ESP32bootcam">
+      <h2>ESP32 Camera – Full Details</h2>
+      <ul>
+        <li>Dual-core Xtensa LX6 processor</li>
+        <li>Wi-Fi + Bluetooth connectivity</li>
+        <li>520KB SRAM, 4MB Flash</li>
+        <li>Low-power consumption modes</li>
+        <li>Camera intergrated</li>
+      </ul>
+      <p><a href="esp32-datasheet.pdf" target="_blank">Download Datasheet</a></p>
+      <p><a href="#">Tutorial: Getting Started with ESP32</a></p>
+    </div>
+  </div>
+
+  <!-- ESP32cam BOARD -->
+  <div id="esp32cam" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal('esp32cam')">&times;</span>
+      <img src="esp32cam.jpg" alt="ESP32cam">
+      <h2>ESP32 Camera – Full Details</h2>
+      <ul>
+        <li>Camera intergration</li>
+        <li>Wi-Fi + Bluetooth connectivity</li>
+        <li>520KB SRAM, 4MB Flash</li>
+        <li>Low-power consumption modes</li>
+      </ul>
+      <p><a href="esp32-datasheet.pdf" target="_blank">Download Datasheet</a></p>
+      <p><a href="#">Tutorial: Getting Started with ESP32</a></p>
+    </div>
+  </div>
+
+  <!-- UNO -->
+  <div id="arduinoUnoModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal('arduinoUnoModal')">&times;</span>
+      <img src="unor3.jpg" alt="Arduino Uno">
+      <h2>Arduino Uno R3 – Full Details</h2>
+      <ul>
+        <li>ATmega328P microcontroller</li>
+        <li>14 digital I/O pins</li>
+        <li>32KB Flash memory</li>
+        <li>USB powered</li>
+      </ul>
+      <p><a href="arduino-uno-datasheet.pdf" target="_blank">Download Datasheet</a></p>
+      <p><a href="#">Tutorial: Blink LED with Arduino Uno</a></p>
+    </div>
+  </div>
+
+  <script>
+    let cart = [];
+
+    function addToCart(product, price) {
+      cart.push({ product, price });
+      renderCart();
+    }
+
+    function renderCart() {
+      const cartItems = document.getElementById('cart-items');
+      cartItems.innerHTML = '';
+      let total = 0;
+      cart.forEach(item => {
+        const li = document.createElement('li');
+        li.textContent = `${item.product} - $${item.price.toFixed(2)}`;
+        cartItems.appendChild(li);
+        total += item.price;
+      });
+      document.getElementById('cart-total').textContent = total.toFixed(2);
+    }
+
+    function checkout() {
+      if (cart.length === 0) {
+        alert('Your cart is empty!');
+      } else {
+        alert('Proceeding to checkout...');
+      }
+    }
+
+    function openModal(id) {
+      document.getElementById(id).style.display = "block";
+    }
+    function closeModal(id) {
+      document.getElementById(id).style.display = "none";
+    }
+  </script>
+
+</body>
+</html>
