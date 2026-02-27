@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Review your cart and complete your order at MICROPRICES.">
+  <title>Checkout - MICROPRICES</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header>
+    <h1>MICROPRICES</h1>
+    <p>Clean, affordable, and engineer-friendly e-commerce</p>
+    <nav role="navigation" aria-label="Primary">
+      <span class="nav-toggle" id="nav-toggle">&#9776;</span>
+      <ul id="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="shop.html">Shop</a></li>
+        <li><a href="#">About Us</a></li>
+        <li><a href="checkout.html" class="active">Checkout</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <h2 class="section-title">Your Order</h2>
+    <section class="cart" id="checkout-cart">
+      <form id="order-form" action="mailto:emmanuelmununa3@gmail.com" method="post" enctype="text/plain">
+        <table id="checkout-items" style="width:100%; border-collapse:collapse;">
+          <thead>
+            <tr>
+              <th style="text-align:left; padding:8px;">Item</th>
+              <th style="text-align:right; padding:8px;">Price</th>
+              <th style="text-align:right; padding:8px;">Qty</th>
+              <th style="text-align:right; padding:8px;">Subtotal</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+        <p style="text-align:right; margin-top:20px;"><strong>Total: $<span id="checkout-total">0.00</span></strong></p>
+        <textarea name="order-details" id="order-details" style="display:none;"></textarea>
+        <button id="place-order" type="submit">Place Order</button>
+      </form>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 MICROPRICES | Clean, affordable, and engineer-friendly e-commerce</p>
+  </footer>
+
+  <script src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="ESP32 DevKit V1 details and purchasing page on MICROPRICES.">
+  <title>ESP32 DevKit V1 - MICROPRICES</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Page-specific layout tweaks */
+    .product-detail { display: flex; padding: 40px; gap: 40px; flex-wrap: wrap; }
+    .product-detail img { max-width: 300px; border: 1px solid #ddd; }
+    .info { max-width: 600px; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>MICROPRICES</h1>
+    <p>Clean, affordable, and engineer-friendly e-commerce</p>
+    <nav role="navigation" aria-label="Primary">
+      <span class="nav-toggle" id="nav-toggle">&#9776;</span>
+      <ul id="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="shop.html" class="active">Shop</a></li>
+        <li><a href="#">About Us</a></li>
+        <li><a href="checkout.html">Checkout</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+  <section class="product-detail">
+    <img src="esp32.jpg" alt="ESP32 DevKit V1">
+    <div class="info">
+      <h2>ESP32 DevKit V1</h2>
+      <p><strong>Price:</strong> $6.99</p>
+      <p><strong>Specs:</strong> Dual-core Xtensa LX6, Wi-Fi + Bluetooth, 520KB SRAM, 4MB Flash.</p>
+      <button class="add-to-cart" data-product="ESP32 DevKit V1" data-price="6.99" data-image="esp32.jpg">Add to Cart</button>
+
+      <div class="tabs">
+        <h3>Datasheet</h3>
+        <p><a href="esp32-datasheet.pdf" target="_blank">Download ESP32 Datasheet (PDF)</a></p>
+
+        <h3>Tutorials</h3>
+        <ul>
+          <li><a href="#">Getting Started with ESP32</a></li>
+          <li><a href="#">Wi-Fi Setup Guide</a></li>
+          <li><a href="#">Bluetooth Integration</a></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2026 MICROPRICES | Clean, affordable, and engineer-friendly e-commerce</p>
+  </footer>
+
+  <script src="main.js"></script>
+
+</body>
+</html>
