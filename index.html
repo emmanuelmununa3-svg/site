@@ -3,86 +3,444 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Browse affordable microcontrollers and engineer‑friendly tutorials at MICROPRICES. Fast shipping, low cost, and clean design.">
-  <title>MICROPRICES - Clean, Affordable, Engineer-Friendly E-Commerce</title>
-  <link rel="stylesheet" href="style.css">
-  <meta name="google-site-verification" content="8WP4pHyWvWE2SkYQ0TQMgVpiDAF3OmGe337tS_uTlT8" />
+  <title>ESP32 DHT Monitor</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --bg: #eef6f2;
+      --panel: rgba(255, 255, 255, 0.78);
+      --panel-border: rgba(22, 62, 46, 0.12);
+      --text: #163e2e;
+      --muted: #567267;
+      --temp: #db5a42;
+      --humid: #1e8b8f;
+      --accent: #cde9d5;
+      --shadow: 0 18px 60px rgba(22, 62, 46, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Space Grotesk", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(205, 233, 213, 0.95), transparent 35%),
+        radial-gradient(circle at bottom right, rgba(30, 139, 143, 0.15), transparent 30%),
+        linear-gradient(135deg, #f8fcf9 0%, #eef6f2 100%);
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+
+    .dashboard {
+      width: min(1100px, 100%);
+      background: var(--panel);
+      border: 1px solid var(--panel-border);
+      backdrop-filter: blur(18px);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .hero {
+      padding: 28px 28px 18px;
+      background:
+        linear-gradient(140deg, rgba(205, 233, 213, 0.9), rgba(255, 255, 255, 0.35)),
+        linear-gradient(135deg, rgba(30, 139, 143, 0.08), transparent);
+      border-bottom: 1px solid var(--panel-border);
+    }
+
+    .hero h1 {
+      margin: 0 0 8px;
+      font-size: clamp(2rem, 3vw, 3.2rem);
+      line-height: 0.95;
+    }
+
+    .hero p,
+    .meta,
+    .status {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .meta {
+      margin-top: 10px;
+      font-size: 0.95rem;
+    }
+
+    .content {
+      padding: 24px 28px 28px;
+      display: grid;
+      gap: 22px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .card {
+      border-radius: 22px;
+      padding: 22px;
+      background: rgba(255, 255, 255, 0.76);
+      border: 1px solid rgba(22, 62, 46, 0.08);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::after {
+      content: "";
+      position: absolute;
+      inset: auto -25px -25px auto;
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .label {
+      font-size: 0.95rem;
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+
+    .value-row {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+    }
+
+    .value {
+      font-size: clamp(2.2rem, 5vw, 4rem);
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .unit {
+      font-size: 1.1rem;
+      color: var(--muted);
+    }
+
+    .temperature .value {
+      color: var(--temp);
+    }
+
+    .humidity .value {
+      color: var(--humid);
+    }
+
+    .chart-wrap {
+      border-radius: 24px;
+      padding: 18px;
+      background: rgba(255, 255, 255, 0.76);
+      border: 1px solid rgba(22, 62, 46, 0.08);
+    }
+
+    canvas {
+      width: 100%;
+      height: 340px;
+    }
+
+    .status-bar {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .status {
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 720px) {
+      .cards {
+        grid-template-columns: 1fr;
+      }
+
+      .hero,
+      .content {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+      canvas {
+        height: 280px;
+      }
+    }
+  </style>
 </head>
 <body>
+  <main class="dashboard">
+    <section class="hero">
+      <p class="meta">GitHub Pages + Firebase Realtime Database</p>
+      <h1>ESP32 DHT Live Monitor</h1>
+      <p>Shows the latest temperature and humidity values from your ESP32 and keeps a rolling chart of the last 30 seconds.</p>
+    </section>
 
-  <header>
-    <h1>MICROPRICES</h1>
-    <p>Clean, affordable, and engineer-friendly e-commerce</p>
-    <nav role="navigation" aria-label="Primary">
-      <span class="nav-toggle" id="nav-toggle">&#9776;</span>
-      <ul id="nav-links">
-        <li><a href="index.html" class="active">Home</a></li>
-        <li><a href="shop.html">Shop</a></li>
-        <li><a href="#">About Us</a></li>
-        <li><a href="checkout.html">Checkout</a></li>
-      </ul>
-    </nav>
-  </header>
+    <section class="content">
+      <div class="cards">
+        <article class="card temperature">
+          <div class="label">Temperature</div>
+          <div class="value-row">
+            <div class="value" id="temperatureValue">--</div>
+            <div class="unit">&deg;C</div>
+          </div>
+        </article>
 
-  <main>
-  <section class="hero" aria-labelledby="hero-heading">
-    <h2 id="hero-heading">Affordable Microcontrollers for Every Innovator</h2>
-    <button id="shop-now">Shop Now</button>
-    <button id="learn-more">Learn More</button>
-  </section>
-
-  <section class="features">
-    <div class="feature">
-      <h3>Clean Design</h3>
-      <p>Easy navigation and clear product specs.</p>
-    </div>
-    <div class="feature">
-      <h3>Affordable Pricing</h3>
-      <p>Competitive rates for students and engineers.</p>
-    </div>
-    <div class="feature">
-      <h3>Engineer-Friendly</h3>
-      <p>Tutorials, datasheets, and support included.</p>
-    </div>
-  </section>
-
-  <section class="products">
-    <h2>Featured Products</h2>
-    <div class="product-grid">
-      <div class="product">
-        <img src="esp32.jpg" alt="ESP32 Board">
-        <h4>ESP32 Wi-Fi Board</h4>
-        <p>$6.99</p>
-        <button class="add-to-cart" data-product="ESP32 Wi-Fi Board" data-price="6.99" data-image="esp32.jpg">Add to Cart</button>
+        <article class="card humidity">
+          <div class="label">Humidity</div>
+          <div class="value-row">
+            <div class="value" id="humidityValue">--</div>
+            <div class="unit">%</div>
+          </div>
+        </article>
       </div>
-      <div class="product">
-        <img src="arduino.jpg" alt="Arduino Uno">
-        <h4>Arduino Uno</h4>
-        <p>$12.99</p>
-        <button class="add-to-cart" data-product="Arduino Uno" data-price="12.99" data-image="arduino.jpg">Add to Cart</button>
-      </div>
-      <div class="product">
-        <img src="stm32.jpg" alt="STM32 Board">
-        <h4>STM32 Blue Pill</h4>
-        <p>$8.99</p>
-        <button class="add-to-cart" data-product="STM32 Blue Pill" data-price="8.99" data-image="stm32.jpg">Add to Cart</button>
-      </div>
-    </div>
-  </section>
 
-  <section class="cart" id="cart">
-    <h2>Shopping Cart</h2>
-    <ul id="cart-items"></ul>
-    <p><strong>Total: $<span id="cart-total">0.00</span></strong></p>
-    <button id="checkout-btn">Checkout</button>
-  </section>
+      <div class="chart-wrap">
+        <canvas id="sensorChart"></canvas>
+      </div>
+
+      <div class="status-bar">
+        <p class="status" id="statusText">Connecting to Firebase...</p>
+        <p class="status" id="updatedAt">Waiting for data...</p>
+      </div>
+    </section>
   </main>
 
-  <footer>
-    <p>&copy; 2026 MICROPRICES | Clean, affordable, and engineer-friendly e-commerce</p>
-  </footer>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getDatabase, onValue, ref } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
-  <script src="main.js"></script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyAqbKTzZr9QUxjJD-hOGg_6o06esTBBiBI",
+      authDomain: "tesi-7f98b.firebaseapp.com",
+      databaseURL: "https://tesi-7f98b-default-rtdb.firebaseio.com",
+      projectId: "tesi-7f98b",
+      storageBucket: "tesi-7f98b.firebasestorage.app",
+      messagingSenderId: "284035491940"
+    };
 
+    const loginEmail = "esp32@test.com";
+    const loginPassword = "yourpassword123";
+    const rollingWindowMs = 30000;
+    const dataPoints = [];
+
+    const tempEl = document.getElementById("temperatureValue");
+    const humidityEl = document.getElementById("humidityValue");
+    const statusEl = document.getElementById("statusText");
+    const updatedAtEl = document.getElementById("updatedAt");
+
+    const chart = new Chart(document.getElementById("sensorChart"), {
+      type: "line",
+      data: {
+        datasets: [
+          {
+            label: "Temperature (°C)",
+            borderColor: "#db5a42",
+            backgroundColor: "rgba(219, 90, 66, 0.12)",
+            data: [],
+            borderWidth: 3,
+            tension: 0.35,
+            pointRadius: 2.5,
+            pointHoverRadius: 4,
+            yAxisID: "y"
+          },
+          {
+            label: "Humidity (%)",
+            borderColor: "#1e8b8f",
+            backgroundColor: "rgba(30, 139, 143, 0.12)",
+            data: [],
+            borderWidth: 3,
+            tension: 0.35,
+            pointRadius: 2.5,
+            pointHoverRadius: 4,
+            yAxisID: "y1"
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: false,
+        interaction: {
+          mode: "index",
+          intersect: false
+        },
+        plugins: {
+          legend: {
+            labels: {
+              usePointStyle: true,
+              color: "#163e2e",
+              font: {
+                family: "Space Grotesk"
+              }
+            }
+          }
+        },
+        scales: {
+          x: {
+            type: "linear",
+            min: 0,
+            max: 30,
+            title: {
+              display: true,
+              text: "Seconds in last 30s",
+              color: "#567267"
+            },
+            ticks: {
+              color: "#567267"
+            },
+            grid: {
+              color: "rgba(22, 62, 46, 0.08)"
+            }
+          },
+          y: {
+            position: "left",
+            title: {
+              display: true,
+              text: "Temperature °C",
+              color: "#db5a42"
+            },
+            ticks: {
+              color: "#db5a42"
+            },
+            grid: {
+              color: "rgba(22, 62, 46, 0.08)"
+            }
+          },
+          y1: {
+            position: "right",
+            title: {
+              display: true,
+              text: "Humidity %",
+              color: "#1e8b8f"
+            },
+            ticks: {
+              color: "#1e8b8f"
+            },
+            grid: {
+              drawOnChartArea: false
+            }
+          }
+        }
+      }
+    });
+
+    function findNumberByKeys(source, keys) {
+      if (!source || typeof source !== "object") {
+        return null;
+      }
+
+      for (const [key, value] of Object.entries(source)) {
+        if (keys.includes(key.toLowerCase()) && Number.isFinite(Number(value))) {
+          return Number(value);
+        }
+      }
+
+      for (const value of Object.values(source)) {
+        if (value && typeof value === "object") {
+          const nested = findNumberByKeys(value, keys);
+          if (nested !== null) {
+            return nested;
+          }
+        }
+      }
+
+      return null;
+    }
+
+    function extractSensorValues(payload) {
+      if (!payload || typeof payload !== "object") {
+        return { temperature: null, humidity: null };
+      }
+
+      return {
+        temperature: findNumberByKeys(payload, ["temperature", "temp"]),
+        humidity: findNumberByKeys(payload, ["humidity", "hum"])
+      };
+    }
+
+    function formatValue(value) {
+      return value === null ? "--" : value.toFixed(1);
+    }
+
+    function pruneData(now) {
+      while (dataPoints.length && now - dataPoints[0].timestamp > rollingWindowMs) {
+        dataPoints.shift();
+      }
+    }
+
+    function redrawChart() {
+      const now = Date.now();
+      pruneData(now);
+
+      chart.data.datasets[0].data = dataPoints.map((point) => ({
+        x: Math.max(0, (rollingWindowMs - (now - point.timestamp)) / 1000),
+        y: point.temperature
+      }));
+
+      chart.data.datasets[1].data = dataPoints.map((point) => ({
+        x: Math.max(0, (rollingWindowMs - (now - point.timestamp)) / 1000),
+        y: point.humidity
+      }));
+
+      chart.update();
+    }
+
+    function updateReadout(temperature, humidity) {
+      tempEl.textContent = formatValue(temperature);
+      humidityEl.textContent = formatValue(humidity);
+      updatedAtEl.textContent = `Last update: ${new Date().toLocaleTimeString()}`;
+    }
+
+    function pushPoint(temperature, humidity) {
+      const now = Date.now();
+      dataPoints.push({ timestamp: now, temperature, humidity });
+      pruneData(now);
+      updateReadout(temperature, humidity);
+      redrawChart();
+    }
+
+    async function start() {
+      try {
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getDatabase(app);
+
+        await signInWithEmailAndPassword(auth, loginEmail, loginPassword);
+        statusEl.textContent = "Connected. Listening for ESP32 sensor data...";
+
+        onValue(ref(db, "/"), (snapshot) => {
+          const values = extractSensorValues(snapshot.val());
+
+          if (values.temperature === null || values.humidity === null) {
+            statusEl.textContent = "Connected, but temperature/humidity keys were not found yet.";
+            return;
+          }
+
+          statusEl.textContent = "Receiving live data from Firebase.";
+          pushPoint(values.temperature, values.humidity);
+        }, (error) => {
+          statusEl.textContent = `Database error: ${error.message}`;
+        });
+
+        setInterval(redrawChart, 1000);
+      } catch (error) {
+        statusEl.textContent = `Connection failed: ${error.message}`;
+      }
+    }
+
+    start();
+  </script>
 </body>
 </html>
